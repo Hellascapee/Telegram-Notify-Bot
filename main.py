@@ -1,8 +1,5 @@
 import telebot
-import logging
-from aiogram import Bot,Dispatcher,executor,types
 from telebot import types
-from notifiers import get_notifier
 
 #5165717781:AAFjU1odFXMuyNSnZk4xxoEJTzc2wKUsCTA
 bot = telebot.TeleBot("5165717781:AAFjU1odFXMuyNSnZk4xxoEJTzc2wKUsCTA")
