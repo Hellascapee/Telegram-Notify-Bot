@@ -1,7 +1,7 @@
 import telebot
 from telebot import types
 import time
-bot = telebot.TeleBot('5165717781:AAFjU1odFXMuyNSnZk4xxoEJTzc2wKUsCTA')
+bot = telebot.TeleBot('5214967905:AAGjM1jR_j4uCQMb_fOoMGmFFj1yyLhQt0w')
 #supports arr
 sup=[]
 sup1=[]
