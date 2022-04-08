@@ -37,7 +37,7 @@ def choose(message):
 		keyboard = types.InlineKeyboardMarkup()
 		key_hour = types.InlineKeyboardButton(text='Минуты', callback_data='min')
 		keyboard.add(key_hour)
-		key_min = types.InlineKeyboardButton(text='Часов', callback_data='hour')
+		key_min = types.InlineKeyboardButton(text='Часы', callback_data='hour')
 		keyboard.add(key_min)
 		key_day = types.InlineKeyboardButton(text='Дни', callback_data='days')
 		keyboard.add(key_day)
