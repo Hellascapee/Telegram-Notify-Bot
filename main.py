@@ -10,12 +10,12 @@ sup3=[2,3,4]
 sup4=[5,6,7,8,9,0]
 @bot.message_handler(commands=['start', 'help'])
 def welcome(message):
-	bot.send_message(message.from_user.id, 'Вас приветствует NotifyBot(бот-напоминание)\n'
+	bot.send_message(message.chat.id, 'Вас приветствует NotifyBot(бот-напоминание)\n'
 										   'Бот предназначен для создания напоминаний.\n'
 										   'Чтобы начать введите /notify или /n')
 @bot.message_handler(commands=['n', 'notify'])
 def request(message):
-	bot.send_message(message.from_user.id, 'О чем напомнить?')
+	bot.send_message(message.chat.id, 'О чем напомнить?')
 	bot.register_next_step_handler(message,choose)
 def choose(message):
 	req=message.text
@@ -31,20 +31,20 @@ def choose(message):
 		key_min = types.InlineKeyboardButton(text='Часы', callback_data='hour')
 		key_day = types.InlineKeyboardButton(text='Дни', callback_data='days')
 		keyboard.add(key_min,key_hour,key_day)
-		bot.send_message(message.from_user.id, text=ed_iden, reply_markup=keyboard)
-		@bot.callback_query_handler(func=lambda call: True)
-		def choose_1(call):
-			if call.data=='min':
-				bot.send_message(message.from_user.id,'Введите целое количество минут.')
-				bot.register_next_step_handler(message,mins)
-			elif call.data=='hour':
-				bot.send_message(message.from_user.id,'Введите целое количество часов.')
-				bot.register_next_step_handler(message, hour)
-			elif call.data == 'days':
-				bot.send_message(message.from_user.id, 'Введите целое количество дней.')
-				bot.register_next_step_handler(message, day)
-def mins(message):
-	text = message.text
+		bot.send_message(message.chat.id, text=ed_iden, reply_markup=keyboard)
+@bot.callback_query_handler(func=lambda call: True)
+def choose_1(call):
+	if call.data=='min':
+		bot.send_message(call.message.chat.id,'Введите целое количество минут.')
+		bot.register_next_step_handler(call.message, mins)
+	elif call.data=='hour':
+		bot.send_message(call.message.chat.id,'Введите целое количество часов.')
+		bot.register_next_step_handler(call.message, hour)
+	elif call.data == 'days':
+		bot.send_message(call.message.chat.id, 'Введите целое количество дней.')
+		bot.register_next_step_handler(call.message, day)
+def mins(call):
+	text = call.text
 	if text=='1':
 		end='минуту'
 	elif int(text) in sup3:
@@ -54,11 +54,11 @@ def mins(message):
 	else:
 		end='минуты'
 	kolvo=int(text)
-	bot.send_message(message.from_user.id, 'Я напомню вам о '+str(sup[0])+' через '+str(kolvo)+' '+str(end)+'!')
+	bot.send_message(call.chat.id, 'Я напомню вам о '+str(sup[0])+' через '+str(kolvo)+' '+str(end)+'!')
 	time.sleep(kolvo*60)
-	bot.send_message(message.from_user.id,text=sup)
-def hour(message):
-	text = message.text
+	bot.send_message(call.chat.id,text=sup)
+def hour(call):
+	text = call.text
 	if text == '1':
 		end = 'час'
 	elif int(text) in sup3:
@@ -68,11 +68,11 @@ def hour(message):
 	else:
 		end = 'часов'
 	kolvo = int(text)
-	bot.send_message(message.from_user.id, 'Я напомню вам о ' + str(sup[0]) + ' через ' + str(kolvo) + ' ' + str(end) + '!')
+	bot.send_message(call.chat.id, 'Я напомню вам о ' + str(sup[0]) + ' через ' + str(kolvo) + ' ' + str(end) + '!')
 	time.sleep(kolvo * 60 * 60)
-	bot.send_message(message.from_user.id, text=sup)
-def day(message):
-	text = message.text
+	bot.send_message(call.chat.id, text=sup)
+def day(call):
+	text = call.text
 	if text == '1':
 		end = 'день'
 	elif int(text) in sup3:
@@ -82,7 +82,7 @@ def day(message):
 	else:
 		end = 'дней'
 	kolvo = int(text)
-	bot.send_message(message.from_user.id,'Я напомню вам о ' + str(sup[0]) + ' через ' + str(kolvo) + ' ' + str(end) + '!')
+	bot.send_message(call.chat.id,'Я напомню вам о ' + str(sup[0]) + ' через ' + str(kolvo) + ' ' + str(end) + '!')
 	time.sleep(kolvo * 24 * 60 * 60)
-	bot.send_message(message.from_user.id, text=sup)
+	bot.send_message(call.chat.id, text=sup)
 bot.infinity_polling()
