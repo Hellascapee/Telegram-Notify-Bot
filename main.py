@@ -18,6 +18,7 @@ def request(message):
 	bot.send_message(message.chat.id, 'О чем напомнить?')
 	bot.register_next_step_handler(message,choose)
 def choose(message):
+	sup[0]=''
 	req=message.text
 	sup.append(req)
 	if sup[0] in msup:
