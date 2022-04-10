@@ -3,7 +3,7 @@ import telebot
 from telebot import types
 import time
 import sqlite3
-bot = telebot.TeleBot('5225548067:AAFmAcwNtJL9KISL4QBkDt2LjUos8CSy0No')
+bot = telebot.TeleBot('5214967905:AAGjM1jR_j4uCQMb_fOoMGmFFj1yyLhQt0w')
 #работа с базой данных SQL
 conn = sqlite3.connect('database.db',check_same_thread=False)
 cursor = conn.cursor()
