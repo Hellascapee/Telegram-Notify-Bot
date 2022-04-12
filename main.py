@@ -9,21 +9,21 @@ DB_URI="postgres://rdpthcxbvnlydf:542b009ab6a9863f835f02efa62d7d93d280438f5f488c
 conn=psycopg2.connection(DB_URI,sslmode="require")
 cursor=conn.cursor()
 def db_table_val(us_id, text):
-	cursor.execute('INSERT INTO test (us_id, text) VALUES (?, ?)',
+	cursor.execute('INSERT INTO users (us_id, text) VALUES (?, ?)',
 				   (us_id, text))
 	conn.commit()
 
 
 def db_table_val1(text):
-	cursor.execute('INSERT INTO test (text) VALUES(?)', (text,))
+	cursor.execute('INSERT INTO users (text) VALUES(?)', (text,))
 	conn.commit()
 
 def sql_carry(us_id,text):
-	check = cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,))
+	check = cursor.execute('SELECT * FROM users WHERE us_id=?', (us_id,))
 	if check.fetchone() is None:
 		db_table_val(us_id, text)
 	else:
-		delete = """DELETE from test where us_id = ?"""
+		delete = """DELETE from users where us_id = ?"""
 		cursor.execute(delete, (us_id,))
 		conn.commit()
 		db_table_val(us_id, text)
@@ -75,7 +75,7 @@ def choose_1(call):
 		bot.register_next_step_handler(call.message, day)
 def mins(call):
 	us_id=call.from_user.id
-	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
+	for value in cursor.execute('SELECT * FROM users WHERE us_id=?', (us_id,)):
 		reqq=value[1]
 	text = call.text
 	if text=='1':
@@ -92,7 +92,7 @@ def mins(call):
 	bot.send_message(call.chat.id,text=reqq)
 def hour(call):
 	us_id=call.from_user.id
-	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
+	for value in cursor.execute('SELECT * FROM users WHERE us_id=?', (us_id,)):
 		reqq=value[1]
 	text = call.text
 	if text == '1':
@@ -109,7 +109,7 @@ def hour(call):
 	bot.send_message(call.chat.id, text=reqq)
 def day(call):
 	us_id=call.from_user.id
-	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
+	for value in cursor.execute('SELECT * FROM users WHERE us_id=?', (us_id,)):
 		reqq=value[1]
 	text = call.text
 	if text == '1':
