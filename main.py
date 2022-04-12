@@ -2,20 +2,31 @@
 import telebot
 from telebot import types
 import time
-import sqlite3
+import psycopg2
 bot = telebot.TeleBot('5214967905:AAGjM1jR_j4uCQMb_fOoMGmFFj1yyLhQt0w')
-#работа с базой данных SQL
-conn = sqlite3.connect('database.db',check_same_thread=False)
-cursor = conn.cursor()
+DB_URI="postgres://rdpthcxbvnlydf:542b009ab6a9863f835f02efa62d7d93d280438f5f488c90c1a86f70c87e8d6d@ec2-52-48-159-67.eu-west-1.compute.amazonaws.com:5432/d62hams8jsvq4a"
+#работа с базой данных PostgreSQL
+conn=psycopg2.connection(DB_URI,sslmode="require")
+cursor=conn.cursor()
+def db_table_val(us_id, text):
+	cursor.execute('INSERT INTO test (us_id, text) VALUES (?, ?)',
+				   (us_id, text))
+	conn.commit()
 
-def db_table_val(us_id,text):
-    cursor.execute('INSERT INTO test (us_id, text) VALUES (?, ?)',
-                   (us_id,text))
-    conn.commit()
+
 def db_table_val1(text):
-    cursor.execute('INSERT INTO test (text) VALUES(?)',(text,))
-    conn.commit()
+	cursor.execute('INSERT INTO test (text) VALUES(?)', (text,))
+	conn.commit()
 
+def sql_carry(us_id,text):
+	check = cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,))
+	if check.fetchone() is None:
+		db_table_val(us_id, text)
+	else:
+		delete = """DELETE from test where us_id = ?"""
+		cursor.execute(delete, (us_id,))
+		conn.commit()
+		db_table_val(us_id, text)
 #supporst arr
 msup=['/min','/day','/hour','/help','/start','/n','/notify']
 sup=[1]
@@ -49,15 +60,7 @@ def request(message):
 		keyboard.add(key_min, key_hour, key_day)
 		bot.send_message(message.chat.id, text=ed_iden, reply_markup=keyboard)
 
-def sql_carry(us_id,text):
-	check = cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,))
-	if check.fetchone() is None:
-		db_table_val(us_id, text)
-	else:
-		delete = """DELETE from test where us_id = ?"""
-		cursor.execute(delete, (us_id,))
-		conn.commit()
-		db_table_val(us_id, text)
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def choose_1(call):
@@ -74,7 +77,6 @@ def mins(call):
 	us_id=call.from_user.id
 	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
 		reqq=value[1]
-	print(reqq)
 	text = call.text
 	if text=='1':
 		end='минуту'
@@ -92,7 +94,6 @@ def hour(call):
 	us_id=call.from_user.id
 	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
 		reqq=value[1]
-	print(reqq)
 	text = call.text
 	if text == '1':
 		end = 'час'
@@ -110,7 +111,6 @@ def day(call):
 	us_id=call.from_user.id
 	for value in cursor.execute('SELECT * FROM test WHERE us_id=?', (us_id,)):
 		reqq=value[1]
-	print(reqq)
 	text = call.text
 	if text == '1':
 		end = 'день'
