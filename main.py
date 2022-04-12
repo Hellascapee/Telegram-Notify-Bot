@@ -1,8 +1,13 @@
 #нужные модули
-import telebot
 from telebot import types
 import time
+import os
+import telebot
 import psycopg2
+from flask import Flask, request
+server=Flask(__name__)
+BOT_TOKEN='5214967905:AAGjM1jR_j4uCQMb_fOoMGmFFj1yyLhQt0w'
+APP_URL='https://telegram-n-bot.herokuapp.com/'+BOT_TOKEN
 bot = telebot.TeleBot('5214967905:AAGjM1jR_j4uCQMb_fOoMGmFFj1yyLhQt0w')
 DB_URI="postgres://rdpthcxbvnlydf:542b009ab6a9863f835f02efa62d7d93d280438f5f488c90c1a86f70c87e8d6d@ec2-52-48-159-67.eu-west-1.compute.amazonaws.com:5432/d62hams8jsvq4a"
 #работа с базой данных PostgreSQL
@@ -27,6 +32,14 @@ def sql_carry(us_id,text):
 		cursor.execute(delete, (us_id,))
 		conn.commit()
 		db_table_val(us_id, text)
+
+if __name__ == "__main__":
+	bot.remove_webhook()
+	bot.set_webhook(url=APP_URL)
+	server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+
+
 #supporst arr
 msup=['/min','/day','/hour','/help','/start','/n','/notify']
 sup=[1]
